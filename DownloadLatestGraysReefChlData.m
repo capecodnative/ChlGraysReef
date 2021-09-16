@@ -19,13 +19,12 @@ tempRemoteDataFileType={'daily','7day','daily','7day'}; %For each, is it daily o
 tempExtensionsToGet={'nc4','png'};
 
 %Make a list of local folders to store data files and create them if needed
-tempDirsToCheck=strcat(tempLocalDataDirName,'/',tempLocalDataSubdirNames); 
+tempDirsToCheck=strcat(tempLocalDataDirName,'/',tempLocalDataSubdirNames);
 for i=1:numel(tempDirsToCheck)
     if ~exist(tempDirsToCheck{i},'dir')
         mkdir(tempDirsToCheck{i});
     end
 end
-
 
 tempTodayDayOfYear=day(datetime,('dayofyear')); %Get the current day of the year
 tempTodayYear=year(datetime); %Get the current year
@@ -33,8 +32,7 @@ tempTodayYear=year(datetime); %Get the current year
 fprintf('Connecting to FTP site\n');
 tempftpobj=ftp('ftp.star.nesdis.noaa.gov'); %Connect to the NOAA Chl data site
 
-
-for i=2:2:numel(tempRemoteDataFileType)
+for i=1:numel(tempRemoteDataFileType)
     tempFilesToGet=[];
     if strcmp(tempRemoteDataFileType{i},'daily')
         tempFilesToGet=compose(tempRemoteDataFilenames{i},repmat(repmat(tempTodayYear,tempDaysToGet+1,1),numel(tempExtensionsToGet),1),     repmat((tempTodayDayOfYear:-1:tempTodayDayOfYear-tempDaysToGet)',numel(tempExtensionsToGet),1),     string(reshape(repmat(tempExtensionsToGet,tempDaysToGet+1,1),[],1)));
@@ -58,8 +56,8 @@ for i=2:2:numel(tempRemoteDataFileType)
                 tempftpobj=ftp('ftp.star.nesdis.noaa.gov'); %Re-connect to the NOAA Chl data site
                 cd(tempftpobj,tempRemoteDataSubdirNames{i});
             end
-        end        
-        
+        end
+
         for j=1:numel(tempFilesToGet)
             tempFileDownloadSuccess=0;
             if ~isempty(strfind(tempListing,tempFilesToGet{j}))
@@ -82,7 +80,4 @@ for i=2:2:numel(tempRemoteDataFileType)
     end
 end
 fprintf('Downloads complete.\n');
-
-
-
 clear temp* i j

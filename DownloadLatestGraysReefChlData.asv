@@ -1,5 +1,5 @@
 tempDaysToGet=7; %Number of previous days of daily data that we want to retrieve
-tempWeeksToGet=10; %Number of previous weeks of weekly data that we want to retrieve
+tempWeeksToGet=2; %Number of previous weeks of weekly data that we want to retrieve
 
 tempLocalDataDirName='ChlData'; %Set the local subdirectory names for where we want to store downloaded files
 tempLocalDataSubdirNames={'MODIS/daily','MODIS/7day','VIIRS/daily','VIIRS/7day'};
@@ -34,7 +34,7 @@ fprintf('Connecting to FTP site\n');
 tempftpobj=ftp('ftp.star.nesdis.noaa.gov'); %Connect to the NOAA Chl data site
 
 
-for i=2:2:numel(tempRemoteDataFileType)
+for i=1:numel(tempRemoteDataFileType)
     tempFilesToGet=[];
     if strcmp(tempRemoteDataFileType{i},'daily')
         tempFilesToGet=compose(tempRemoteDataFilenames{i},repmat(repmat(tempTodayYear,tempDaysToGet+1,1),numel(tempExtensionsToGet),1),     repmat((tempTodayDayOfYear:-1:tempTodayDayOfYear-tempDaysToGet)',numel(tempExtensionsToGet),1),     string(reshape(repmat(tempExtensionsToGet,tempDaysToGet+1,1),[],1)));
@@ -49,8 +49,12 @@ for i=2:2:numel(tempRemoteDataFileType)
             try
                 fprintf('Getting dir listing %s ...\n',tempRemoteDataSubdirNames{i});
                 pause(2);
-                tempListing=dir(tempftpobj);
+                tempListing=dir(tempftpobj,strcat('*.',tempExtensionsToGet{1}));
                 tempListing=[tempListing.name];
+                pause(2);
+                tempListing=dir(tempftpobj,strcat('*.',tempExtensionsToGet{1}));
+                tempListing=[tempListing.name];
+                
                 tempListingSuccessful=1;
             catch
                 fprintf('Re-connecting ...\n');
@@ -78,6 +82,7 @@ for i=2:2:numel(tempRemoteDataFileType)
                     end
                 end
             end
+        end
         end
     end
 end

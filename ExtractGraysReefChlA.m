@@ -1,4 +1,4 @@
-tempLocalDataDirName='ChlData'; %Tthe local subdirectory name  where downloaded files are saved
+tempLocalDataDirName='ChlData'; %Tthe local subdirectory name where downloaded files are saved
 tempLocalDataSubdirNames={'MODIS/daily','MODIS/7day','VIIRS/daily','VIIRS/7day'}; %The subdirectory names of the data
 tempDirsToCheck=strcat(tempLocalDataDirName,'/',tempLocalDataSubdirNames); 
 
